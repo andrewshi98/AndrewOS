@@ -1,0 +1,16 @@
+Overall Agendas for the.... Month.
+
+- Implements interrupt and exception
+- Implements Keyboard
+
+- Create efficient helper calls. Memcpy, printc (Lots of work!), etc...
+
+- Multithreading
+
+- File System
+
+- Memory Management (oh no!)
+
+- Create double buffer to remove shuttering in the graphics (Only avaliable after having many memory management mothods avaliable)
+
+- System Calls, Executable (Finally!)
