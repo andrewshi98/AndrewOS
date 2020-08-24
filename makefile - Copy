@@ -1,6 +1,8 @@
 CC				= gcc
 ARCH            = $(shell uname -m | sed s,i[3456789]86,ia32,)
 
+OBJS            = ./Debug/main.o ./Debug/graphics.o ./Debug/efiUtil.o
+TARGET          = ./Debug/BOOTX64.efi
 
 #GNU_EFI LIB AND INC
 
@@ -13,20 +15,15 @@ EFI_LDS         = $(EFILIB)/elf_$(ARCH)_efi.lds
 
 #END
 
-#OS	
+#OS
 
-BOOTINC			= ./boot/
+BOOTINC			= ./init/
 OSINC			= ./include/
 OSINCS			= -I$(OSINC) -I$(BOOTINC)
-OUTDIR			= ./output/
-BOOTDIR			= ./boot/
+OUTDIR			= ./Debug/
+INITDIR			= ./init/
 
 OUTIMG			= ${OUTDIR}fat.img
-
-#BUILD TARGETS
-
-OBJS            = $(BOOTDIR)main.o $(BOOTDIR)graphics.o $(BOOTDIR)efiUtil.o
-TARGET          = $(BOOTDIR)BOOTX64.efi
 
 #END
 
@@ -37,7 +34,7 @@ ifeq ($(ARCH),x86_64)
 endif
 
 LDFLAGS         = -nostdlib -znocombreloc -T $(EFI_LDS) -shared \
-		  		  -Bsymbolic -L $(EFILIB) -L $(LIB) $(EFI_CRT_OBJS) 
+		  -Bsymbolic -L $(EFILIB) -L $(LIB) $(EFI_CRT_OBJS) 
 
 all: directory $(TARGET)
 
@@ -54,11 +51,11 @@ $(TARGET): $(OUTDIR)main.so
 $(OUTDIR)main.so: $(OBJS)
 	ld $(LDFLAGS) $(OBJS) -o $@ -lefi -lgnuefi
 
-$(OUTDIR)%.o: $(BOOTDIR)%.c
+Debug/%.o: init/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm ${OUTDIR} -r -f
+	rm Debug/ -r -f
 
 run:
 	dd if=/dev/zero of=${OUTIMG} bs=1k count=1440

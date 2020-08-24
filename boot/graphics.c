@@ -3,6 +3,7 @@
 #include <efiprot.h>
 
 #include <kernel.h>
+#include "boot.h"
 
 struct GGraphics GGraphics;
 
@@ -12,6 +13,8 @@ EFI_STATUS getMode(EFI_GRAPHICS_OUTPUT_PROTOCOL *GProtocol, OUT UINT32 *Mode);
 uint32_t rgb2bgr(uint32_t rgb);
 uint32_t bgr2rgb(uint32_t bgr);
 int lineBit;
+
+// Well, not really graphics driver but.
 
 EFI_STATUS initGraphics(EFI_GRAPHICS_OUTPUT_PROTOCOL *GProtocol) {
   EFI_STATUS status;
