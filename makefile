@@ -25,8 +25,9 @@ OUTIMG			= ${OUTDIR}fat.img
 
 #BUILD TARGETS
 
-OBJS            = $(BOOTDIR)main.o $(BOOTDIR)graphics.o $(BOOTDIR)efiUtil.o
-TARGET          = $(BOOTDIR)BOOTX64.efi
+OBJS            = $(OUTDIR)main.o $(OUTDIR)graphics.o $(OUTDIR)efiUtil.o $(OUTDIR)boot.o
+TARGET          = $(OUTDIR)BOOTX64.efi
+KERNEL_TARGET	= $(OUTDIR)kernel
 
 #END
 
@@ -39,7 +40,10 @@ endif
 LDFLAGS         = -nostdlib -znocombreloc -T $(EFI_LDS) -shared \
 		  		  -Bsymbolic -L $(EFILIB) -L $(LIB) $(EFI_CRT_OBJS) 
 
-all: directory $(TARGET)
+all: directory make_kernel $(TARGET)
+
+make_kernel:
+	cd kernel && make && cd ..
 
 directory: ${OUTDIR}
 	
@@ -60,11 +64,12 @@ $(OUTDIR)%.o: $(BOOTDIR)%.c
 clean:
 	rm ${OUTDIR} -r -f
 
-run:
+run: all
 	dd if=/dev/zero of=${OUTIMG} bs=1k count=1440
 	mformat -i ${OUTIMG} -f 1440 ::
 	mmd -i ${OUTIMG} ::/EFI
 	mmd -i ${OUTIMG} ::/EFI/BOOT
 	mcopy -i ${OUTIMG} ${TARGET} ::/EFI/BOOT
+	mcopy -i ${OUTIMG} ${KERNEL_TARGET} ::/
 	mkgpt -o ${OUTDIR}hdimage.bin --image-size 4096 --part ${OUTIMG} --type system
 	qemu-system-x86_64 -bios ./TestTool/OVMF_PURE_EFI.fd -hda ${OUTDIR}hdimage.bin

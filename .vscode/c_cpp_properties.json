@@ -4,8 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "/usr/include/efi/**",
-                "${workspaceRoot}/include/**",
-                "${workspaceRoot}/boot/**"
+                "${workspaceRoot}/include/",
+                "${workspaceRoot}/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

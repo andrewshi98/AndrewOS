@@ -34,3 +34,5 @@ void setRGBPixel(int w, int h, uint32_t rgb);
 void setBGRPixel(int w, int h, uint32_t bgr);
 void drawRectangle(uint32_t rgb, int width, int height, int x, int y);
 void clearScreen(uint32_t rgb);
+
+void loadkernel(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable);
